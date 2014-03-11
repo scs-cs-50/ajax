@@ -2,18 +2,24 @@
 <html>
   <head>
     <title>Ajax Test</title>
-    <script>
-    var r = new XMLHttpRequest();
-    r.onload = function () {
-      alert(this.responseText);
-      console.dir(this);
-    }
-    r.open('get', 'test.txt', true);
-    r.send();
-
-    </script>
   </head>
   <body>
     <h1>Ajax Test</h1>
+    <button id='go'>Go</button>
+    <ul id='result'>
+    </ul>
+    <script>
+    function responseHandler() {
+      var li = document.createElement('li');
+      li.innerHTML = this.responseText;
+      document.getElementById('result').appendChild(li);
+    }
+    document.getElementById('go').addEventListener('click', function () {
+      var r = new XMLHttpRequest();
+      r.onload = responseHandler;
+      r.open('get', 'test.txt', true);
+      r.send();
+    });
+    </script>
   </body>
 </html>
