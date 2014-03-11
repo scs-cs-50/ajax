@@ -2,23 +2,76 @@
 <html>
   <head>
     <title>Ajax Test</title>
+    <style>
+section {
+  width: 100%;
+}
+li {
+  height: 40px;
+}
+div {
+  width: 40%;
+  float: left;
+}
+img {
+  display: block;
+}
+    </style>
   </head>
-  <body>
+  <body id='body'>
     <h1>Ajax Test</h1>
     <button id='go'>Go</button>
-    <ul id='result'>
-    </ul>
+    <section>
+      <div>
+        <ul id='result'></ul>
+      </div>
+      <div id='image'></div>
+    </section>
     <script>
+    var which = 0,
+        sources = [ 'test.json', 'beaker.json', 'test.txt', 'missing' ];
     function responseHandler() {
-      var li = document.createElement('li');
-      li.innerHTML = this.responseText;
-      document.getElementById('result').appendChild(li);
+      var li = document.createElement('li'),
+          resp = {};
+
+      try {
+        resp = JSON.parse(this.responseText);
+      } catch (e) {
+        // oops - invalid JSON
+      }
+      console.dir(this);
+      if (resp.type && resp.data) {
+        el = document.createElement('img');
+        el.src = 'data:' + resp.type + ';base64,' + resp.data;
+        document.getElementById('image').appendChild(el);
+//        document.body.append('image').innerHTML
+//          = '<img src="data:' + resp.type + ';base64,' + resp.data + '" />';
+      } else {
+        if (resp.message) {
+          li.innerHTML = resp.message;
+        } else {
+          if (!this.response || this.reponse === '') {
+            li.innerHTML = 'No Response';
+          } else {
+            li.innerHTML = 'Invalid Response';
+          }
+        }
+        document.getElementById('result').appendChild(li);
+      }
     }
     document.getElementById('go').addEventListener('click', function () {
-      var r = new XMLHttpRequest();
-      r.onload = responseHandler;
-      r.open('get', 'test.txt', true);
-      r.send();
+      var r = new XMLHttpRequest(),
+          src = sources[which++];
+
+      which = (which === sources.length) ? 0 : which;
+      r.onerror = r.onabort = r.onload = responseHandler;
+      r.open('get', src, true);
+      try {
+        r.send();
+      } catch (e) {
+        console.log('EXCEPTION');
+        console.dir(e);
+      }
     });
     </script>
   </body>
