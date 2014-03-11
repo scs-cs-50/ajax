@@ -2,23 +2,19 @@
 <html>
   <head>
     <title>Ajax Test</title>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
   </head>
   <body>
     <h1>Ajax Test</h1>
     <button id='go'>Go</button>
-    <ul id='result'>
-    </ul>
+    <ul id='result'></ul>
     <script>
-    function responseHandler() {
-      var li = document.createElement('li');
-      li.innerHTML = this.responseText;
-      document.getElementById('result').appendChild(li);
-    }
-    document.getElementById('go').addEventListener('click', function () {
-      var r = new XMLHttpRequest();
-      r.onload = responseHandler;
-      r.open('get', 'test.txt', true);
-      r.send();
+    $(function () {
+      $('#go').on('click', function () {
+        $.get('test.txt', function (data) {
+          $('#result').append('<li>' + data.trim() + '</li>');
+        });
+      });
     });
     </script>
   </body>
