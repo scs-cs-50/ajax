@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ajax Test</title>
+    <script>
+    var r = new XMLHttpRequest();
+    r.onload = function () {
+      alert(this.responseText);
+      console.dir(this);
+    }
+    r.open('get', 'test.txt', true);
+    r.send();
+
+    </script>
+  </head>
+  <body>
+    <h1>Ajax Test</h1>
+  </body>
+</html>
