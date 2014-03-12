@@ -46,8 +46,10 @@
     });
     document.getElementById('json').addEventListener('click', function () {
       var r = new XMLHttpRequest();
+      // force a non-simple CORS request
+      r.setRequestHeader('content-type', 'application/json');
       r.onerror = r.onabort = r.onload = responseHandler;
-      r.open('get', 'https://experiments.itlab.stanford.edu/cors/', true);
+      r.open('post', 'https://experiments.itlab.stanford.edu/cors/', true);
       r.send();
     });
 
