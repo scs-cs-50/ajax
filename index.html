@@ -16,9 +16,9 @@
       var li = document.createElement('li');
       if (this.status === 200) {
         console.dir(this);
-        if (this.responseType === 'application/json') {
+        try {
           li.innerHTML = JSON.parse(this.responseText).message;
-        } else {
+        } catch (e) {
           li.innerHTML = this.responseText;
         }
       } else {
