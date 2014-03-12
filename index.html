@@ -7,6 +7,7 @@
     <h1>Ajax Test</h1>
     <button id='same'>Same Origin</button>
     <button id='diff'>Different Origin</button>
+    <button id='cors'>Cross Origin</button>
     <ul id='result'>
     </ul>
     <script>
@@ -31,6 +32,13 @@
       r.open('get', 'http://raw.github.com/scs-cs-50/ajax/1_basic/test.txt', true);
       r.send();
     });
+    document.getElementById('cors').addEventListener('click', function () {
+      var r = new XMLHttpRequest();
+      r.onerror = r.onabort = r.onload = responseHandler;
+      r.open('get', 'https://experiments.itlab.stanford.edu/cors/', true);
+      r.send();
+    });
+
     </script>
   </body>
 </html>
