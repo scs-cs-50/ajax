@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Ajax Test</title>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <style>
 section {
   width: 100%;
@@ -28,50 +29,32 @@ img {
       <div id='image'></div>
     </section>
     <script>
-    var which = 0,
-        sources = [ 'test.json', 'beaker.json', 'test.txt', 'missing' ];
-    function responseHandler() {
-      var li = document.createElement('li'),
-          resp = {};
-
-      try {
-        resp = JSON.parse(this.responseText);
-      } catch (e) {
-        // oops - invalid JSON
-      }
-      console.dir(this);
-      if (resp.type && resp.data) {
-        el = document.createElement('img');
-        el.src = 'data:' + resp.type + ';base64,' + resp.data;
-        document.getElementById('image').appendChild(el);
-//        document.body.append('image').innerHTML
-//          = '<img src="data:' + resp.type + ';base64,' + resp.data + '" />';
-      } else {
-        if (resp.message) {
-          li.innerHTML = resp.message;
-        } else {
-          if (!this.response || this.reponse === '') {
-            li.innerHTML = 'No Response';
-          } else {
-            li.innerHTML = 'Invalid Response';
-          }
+    $(function () {
+      var which = 0,
+          sources = [ 'test.json', 'beaker.json', 'test.txt', 'missing' ];
+      
+      $('#go').on('click', function (data) {
+        if (which === sources.length) {
+          which = 0;
         }
-        document.getElementById('result').appendChild(li);
-      }
-    }
-    document.getElementById('go').addEventListener('click', function () {
-      var r = new XMLHttpRequest(),
-          src = sources[which++];
 
-      which = (which === sources.length) ? 0 : which;
-      r.onerror = r.onabort = r.onload = responseHandler;
-      r.open('get', src, true);
-      try {
-        r.send();
-      } catch (e) {
-        console.log('EXCEPTION');
-        console.dir(e);
-      }
+        $.getJSON(sources[which++], function (data) {
+          if (data.type && data.data) {
+            $('#image').append(
+              '<img src="' +
+              'data:' + data.type +
+              ';base64,' + data.data + '" />');
+          } else if (data.message) {
+            $('#result').append('<li>' + data.message.trim() + '</li>');
+          }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+          if (jqXHR.status === 200) {
+              $('#result').append('<li>Invalid Response</li>');
+          } else {
+            $('#result').append('<li>No Response</li>');
+          }
+        });
+      });
     });
     </script>
   </body>
