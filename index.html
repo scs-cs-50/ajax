@@ -50,6 +50,7 @@
       r.onerror = r.onabort = r.onload = responseHandler;
       r.open('post', 'https://experiments.itlab.stanford.edu/cors/json.php', true);
       r.setRequestHeader('Content-Type', 'application/json');
+      r.setRequestHeader('Authorization', 'Bearer 12345');
       r.send();
     });
 
