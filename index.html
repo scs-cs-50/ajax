@@ -15,10 +15,11 @@
     function responseHandler() {
       var li = document.createElement('li');
       if (this.status === 200) {
-        if (this.responseType === 'text/plain') {
-          li.innerHTML = this.responseText;
-        } else if (this.responseType === 'application/json') {
+        console.dir(this);
+        if (this.responseType === 'application/json') {
           li.innerHTML = JSON.parse(this.responseText).message;
+        } else {
+          li.innerHTML = this.responseText;
         }
       } else {
         li.innerHTML = 'Got an error: ' + this.status;
