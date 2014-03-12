@@ -8,13 +8,18 @@
     <button id='same'>Same Origin</button>
     <button id='diff'>Different Origin</button>
     <button id='cors'>Cross Origin</button>
+    <button id='json'>CORS JSON</button>
     <ul id='result'>
     </ul>
     <script>
     function responseHandler() {
       var li = document.createElement('li');
       if (this.status === 200) {
-        li.innerHTML = this.responseText;
+        if (this.responseType === 'text/plain') {
+          li.innerHTML = this.responseText;
+        } else if (this.responseType === 'application/json') {
+          li.innerHTML = JSON.parse(this.responseText).message;
+        }
       } else {
         li.innerHTML = 'Got an error: ' + this.status;
       }
@@ -33,6 +38,12 @@
       r.send();
     });
     document.getElementById('cors').addEventListener('click', function () {
+      var r = new XMLHttpRequest();
+      r.onerror = r.onabort = r.onload = responseHandler;
+      r.open('get', 'https://experiments.itlab.stanford.edu/cors/', true);
+      r.send();
+    });
+    document.getElementById('json').addEventListener('click', function () {
       var r = new XMLHttpRequest();
       r.onerror = r.onabort = r.onload = responseHandler;
       r.open('get', 'https://experiments.itlab.stanford.edu/cors/', true);
